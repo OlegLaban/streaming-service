@@ -1,0 +1,3 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://channel1.example.com/logo.png",Channel Name 1
+http://192.168.31.225:5555/hls/live-misha.m3u8
