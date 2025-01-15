@@ -20,6 +20,7 @@ services:
     env_file: .env
     volumes:
       - ./ffmpeg/media:/media
+      - ./ffmpeg/media/source:/media/source
       - ./ffmpeg/main:/media/main
       - ./ffmpeg/run.sh:/media/run.sh
     depends_on:
