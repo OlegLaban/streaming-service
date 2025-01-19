@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sort"
 )
 
 type History struct {
@@ -24,7 +25,7 @@ func main() {
 		log.Fatal(err)
 	}
 	videos = filter(videos, "mp4")
-
+	videos = sortFiles(videos)
 	filesList := []string{}
 
 	for _, dirE := range videos {
@@ -75,6 +76,29 @@ func filter(files []os.DirEntry, ext string) ([]os.DirEntry) {
 	}
 
 	return r
+}
+
+func sortFiles(files []os.DirEntry) ([]os.DirEntry) {
+	sort.Slice(files, func (i, j int) bool {
+		regex, _ := regexp.Compile("^[0-9]+_")
+
+		nameFirst := files[i].Name()
+		nameSecond := files[j].Name()
+		if (regex.MatchString(nameFirst) && regex.MatchString(nameSecond)) {
+			firstNameSubmatches := regex.FindAllStringSubmatch(nameFirst, 1)
+			secondNameSubmatches := regex.FindAllStringSubmatch(nameSecond, 1)
+			var firstInt int
+			var secondInt int
+			
+			fmt.Sscanf(firstNameSubmatches[0][0], "%d_", &firstInt)
+			fmt.Sscanf(secondNameSubmatches[0][0], "%d_", &secondInt)
+			return firstInt < secondInt
+		}
+		
+		return false;
+	})
+
+	return files
 }
 
 func isNeedExt(filename string, ext string) bool {
